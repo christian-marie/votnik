@@ -22,7 +22,6 @@
 module Botlike.AutomationDSL
 (
     Automation(..),
-    AutomationT(..),
     abort,
     input,
 
@@ -39,13 +38,16 @@ module Botlike.AutomationDSL
 where
 
 import           Control.Applicative
-
+import           Data.Set
+import           Network.URI
+import           Data.Time
 import Text.Blaze.Html(Html)
 import           Control.Applicative.Free
 import           Control.Exception
 import           Control.Monad.Free
 import           Control.Monad.Identity
 import           Data.Monoid
+import           Data.ByteString.Lazy as Lazy
 import           Data.Aeson
 import           Data.String
 import           Data.Text                (Text)
@@ -75,27 +77,62 @@ instance IsString Document where
 newtype InputLabel = InputLabel Text
   deriving (IsString, Monoid)
 
-type Automation = Free AutomationT
 -- | The monad for validating forms
 type Validation = Identity
 
+
+type Token = Text
+type Group = Text
+type Expiry = UTCTime
+
+newtype User = User (Set Group)
+data Policy = Policy (Set Group) (Maybe Expiry)
+
 -- | An interactive automation language
-data AutomationT a where
+--
+-- Is expected to negotiate user identity before evaluation, this identity is
+-- provided with 'User'.
+class Automation f where
     -- | Can't parametrically produce an a, so explode
-    AbortT
-        :: String
-        -> AutomationT a
+    abort
+        :: Text
+        -> f a
 
-    InputT :: Form Text Validation r
-           -> (View Html -> Html)
-           -> (r -> a)
-           -> AutomationT a
+    -- | Request input from user with a digestive-functor form and a template.
+    input
+        :: Form Text Validation r
+        -> (View Html -> Html)
+        -> (r -> f a)
+        -> f a
 
-deriving instance Functor AutomationT
+    finish
+        :: Html -- Should be pandoc or something
+        -> f ()
 
-abort :: String -> Automation a
-abort = liftF . AbortT
+    finish_
+        :: f ()
+    finish_ = finish "done"
 
-input :: Form Text Validation a -> (View Html -> Html)-> Automation a
-input f v = liftF $ InputT f v id
 
+    -- | Ask about the user
+    user
+        :: (User -> f a)
+        -> f a
+
+    -- | Run IO
+    locally
+        :: IO r
+        -> (r -> f a)
+        -> f a
+
+    locally_
+        :: IO r
+        -> f ()
+    locally_ f = locally f (\_ -> finish_)
+
+    -- | Put a thing into the clouds
+    upload
+        :: Lazy.ByteString
+        -> Policy
+        -> (URI -> f a)
+        -> f a

@@ -25,13 +25,10 @@ import qualified Text.Blaze.Html5 as H
 import qualified Text.Digestive.Blaze.Html5 as H2
 
 
-ex1 :: Automation ()
-ex1 = do
-    (name, mail) <- input form template
-    () <- input (pure ()) (\_ -> H.toHtml $ "Hello, " <> mail)
-
-    -- Never reached as user can't satisfy our impossible requirements, hahaha!
-    return ()
+ex1 :: Automation f => f ()
+ex1 = 
+    input form template $  \x -> 
+        locally_ (print x)
   where
     form = (,) <$> "name" .: text Nothing
                <*> "mail" .: check "Empty" (not . Text.null) (text Nothing)

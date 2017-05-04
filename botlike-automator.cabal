@@ -22,16 +22,20 @@ library
   hs-source-dirs:      lib
   exposed-modules:     Botlike,
                        Botlike.AutomationDSL,
+                       Botlike.Implementations.MVarKernel,
                        Botlike.Implementations.REST,
                        Botlike.Implementations.WebForm,
                        Botlike.Automations.Examples
   build-depends:       base >=4.7 && < 5
                      , aeson
+                     , async
                      , bytestring
                      , digestive-functors
                      , digestive-functors-aeson
                      , digestive-functors-blaze
                      , digestive-functors-snap
+                     , time
+                     , network-uri
                      , blaze-html
                      , mmorph
                      , containers
