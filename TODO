@@ -1,0 +1,3 @@
+* MVarKernmel Steps should be "used up" when progress is made, currently we
+  leave behind all intermediate states.
+* URLS of HTTP web form interface is nasty, need to be thought about further.
