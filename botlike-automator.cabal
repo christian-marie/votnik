@@ -1,5 +1,5 @@
-name:                botlike-automator
-version:             0.0.0.1
+name:                votnik
+version:             0.0.1
 synopsis:            Interface for automations with simple dialogues
 description:         Interface for automations with simple dialogues
 homepage:            https://github.com/christian-marie/botlike-automator

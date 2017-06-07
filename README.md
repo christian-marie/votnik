@@ -1,4 +1,4 @@
-# The вotnik (type Votnik f st r = forall f st r. Plot... ) automator
+# The вotnik automation DSL
 
 For creating interactive automations with multiple well abstracted backends.
 

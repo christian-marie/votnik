@@ -85,8 +85,7 @@ type Token = Text
 type Group = Text
 type Expiry = UTCTime
 
-newtype User = User (Set Group)
-data Policy = Policy (Set Group) (Maybe Expiry)
+newtype User = User Text
 
 -- | An interactive automation language
 --
@@ -130,9 +129,14 @@ class Automation f where
         -> f ()
     locally_ f = locally f (\_ -> finish_)
 
-    -- | Put a thing into the clouds
-    upload
-        :: Lazy.ByteString
-        -> Policy
-        -> (URI -> f a)
+    -- | Save to persistent store
+    save
+        :: Text -- Key
+        -> ByteString
+        -> f ()
+
+    -- | Lookup persistent store
+    lookup
+        :: Text
+        -> (Maybe ByteString -> f a)
         -> f a
