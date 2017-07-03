@@ -70,27 +70,21 @@ import           Data.Map                     (Map)
 import qualified Data.Map                     as Map
 import           Data.Maybe                   (fromMaybe)
 import           Data.String                  (IsString (..))
-import           Data.Swagger
 import           Data.Text                    (Text)
 import qualified Data.Text                    as Text
 import           Data.Word                    (Word64)
 import           GHC.Generics                 (Generic)
 import qualified Network.Wai.Handler.Warp     as Warp
-import           Servant
-import           Servant.Swagger
-import           Servant.Swagger.UI
 import           System.Environment           (getArgs, lookupEnv)
 import           Text.Digestive.Aeson
 import           Text.Digestive.View
 import           Text.Read                    (readMaybe)
 
 newtype AutomationID = AutomationID { unAutomationID :: Word64 }
-  deriving (Eq, Ord, Enum, Num, Generic, FromHttpApiData, ToHttpApiData)
-instance ToParamSchema AutomationID
+  deriving (Eq, Ord, Enum, Num, Generic)
 
 newtype StepID = StepID { unStepID :: Word64 }
-  deriving (Generic, FromHttpApiData, Enum, Eq, Ord, Num, FromJSON, ToJSON, ToHttpApiData)
-instance ToParamSchema StepID
+  deriving (Generic, Enum, Eq, Ord, Num, FromJSON, ToJSON )
 
 -- | The type that the user interacts with is simply a function from the
 -- selected InteractionID,

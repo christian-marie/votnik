@@ -23,7 +23,6 @@ library
   exposed-modules:     Botlike,
                        Botlike.AutomationDSL,
                        Botlike.Implementations.MVarKernel,
-                       Botlike.Implementations.REST,
                        Botlike.Implementations.WebForm,
                        Botlike.Automations.Examples
   build-depends:       base >=4.7 && < 5
@@ -50,16 +49,10 @@ library
                      , http-client-tls
                      , uuid
                      , lens
-                     , servant-client
-                     , servant
-                     , servant-swagger-ui
-                     , servant-server
                      , warp
                      , xhtml
                      , mtl
                      , wai
-                     , servant-swagger
-                     , swagger2
                      , transformers
                      , scientific
                      , time
